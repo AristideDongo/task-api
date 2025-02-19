@@ -7,6 +7,7 @@ import { TokenService } from './services/token.service';
 import { JwtService } from '@nestjs/jwt';
 import { Auth } from './entities/auth.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   controllers: [AuthController],
@@ -16,6 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TokenService,
     JwtService,
     AuthRepository,
+    ConfigService,
   ],
   exports: [AuthService],
   imports: [TypeOrmModule.forFeature([Auth])],

@@ -25,19 +25,21 @@ export class AuthService {
     const hashPassword = await this.hashService.hashPassword(
       registerDto.password,
     );
-    const userId = Math.floor(Math.random() * 1000);
-    const refreshToken = this.tokenService.generateRefreshToken(userId);
-
-    const hashRefreshToken = await this.hashService.hashPassword(refreshToken);
 
     const user = new Auth();
     user.email = registerDto.email;
     user.password = hashPassword;
     user.firstName = registerDto.firstName;
     user.lastName = registerDto.lastName;
-    user.refreshToken = hashRefreshToken;
+
+    const userId = user.id;
+    const refreshToken = this.tokenService.generateRefreshToken(userId);
+    const hashRefreshToken = await this.hashService.hashPassword(refreshToken);
 
     const createdUser = this.authRepository.save(user);
+    (await createdUser).refreshToken = hashRefreshToken;
+
+    await this.authRepository.save(await createdUser);
     return {
       accessToken: this.tokenService.generateAccessToken(
         (await createdUser).id,

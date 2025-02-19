@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthRepository } from '../repositories/auth.repository';
+import { ConfigService } from '@nestjs/config';
 
 interface JwtPayload {
   sub: string;
@@ -11,6 +12,7 @@ export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly authRepository: AuthRepository,
+    private readonly configService: ConfigService,
   ) {}
 
   // Générer un accessToken
@@ -18,8 +20,8 @@ export class TokenService {
     return this.jwtService.sign(
       { sub: userId, email },
       {
-        secret: process.env.JWT_SECRET_KEY,
-        expiresIn: process.env.JWT_SECRET_KEY_EXPIRE || '15',
+        secret: this.configService.get('JWT_SECRET_KEY'),
+        expiresIn: this.configService.get('JWT_SECRET_KEY_EXPIRE'),
       },
     );
   }
@@ -29,8 +31,8 @@ export class TokenService {
     return this.jwtService.sign(
       { sub: userId },
       {
-        secret: process.env.JWT_REFRESH_SECRET,
-        expiresIn: process.env.JWT_REFRESH_SECRET_EXPIRE || '7d',
+        secret: this.configService.get('JWT_REFRESH_SECRET'),
+        expiresIn: this.configService.get('JWT_REFRESH_SECRET_EXPIRE'),
       },
     );
   }
@@ -39,7 +41,7 @@ export class TokenService {
   verifyToken(token: string): JwtPayload {
     try {
       return this.jwtService.verify(token, {
-        secret: process.env.JWT_SECRET_KEY,
+        secret: this.configService.get('JWT_SECRET_KEY'),
       });
     } catch {
       throw new Error('Token invalide');
@@ -50,7 +52,7 @@ export class TokenService {
   verifyRefreshToken(token: string): JwtPayload {
     try {
       return this.jwtService.verify(token, {
-        secret: process.env.JWT_REFRESH_SECRET,
+        secret: this.configService.get('JWT_REFRESH_SECRET'),
       });
     } catch {
       throw new Error('Refresh token invalide');
@@ -61,14 +63,14 @@ export class TokenService {
   generateResetToken(userId: string, email: string): string {
     return this.jwtService.sign(
       { sub: userId, email },
-      { secret: process.env.JWT_RESET_SECRET, expiresIn: '15m' },
+      { secret: this.configService.get('JWT_RESET_SECRET'), expiresIn: '15m' },
     );
   }
 
   // Vérification du token de réinitialisation
   verifyResetToken(token: string) {
     return this.jwtService.verify(token, {
-      secret: process.env.JWT_RESET_SECRET,
+      secret: this.configService.get('JWT_RESET_SECRET'),
     });
   }
   // Effacement du token de rafraîchissement lors de la déconnexion
