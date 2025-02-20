@@ -10,7 +10,7 @@ export const databaseConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   url: process.env.DATABASE_URL,
   entities: [Auth, User, Task],
-  synchronize: false, // À mettre à false en production
+  synchronize: true, // À mettre à false en production
   migrations: ['src/migrations/*.ts'],
   logging: false,
 };
