@@ -63,7 +63,7 @@ export class TokenService {
   generateResetToken(userId: string, email: string): string {
     return this.jwtService.sign(
       { sub: userId, email },
-      { secret: this.configService.get('JWT_RESET_SECRET'), expiresIn: '15m' },
+      { secret: this.configService.get('JWT_RESET_SECRET'), expiresIn: '1h' },
     );
   }
 

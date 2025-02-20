@@ -11,7 +11,7 @@ import { AuthService } from '../services/auth.service';
 import { RegisterDto } from '../dtos/register.dto';
 import { LoginDto } from '../dtos/login.dto';
 import { RefreshTokenDto } from '../dtos/refresh-token.dto';
-import { JwtAuthGuard } from 'src/core/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RequestResetPasswordDto } from '../dtos/request-reset-password.dto';
@@ -80,12 +80,6 @@ export class AuthController {
   ): Promise<{ message: string }> {
     if (!dto.token || !dto.password) {
       throw new BadRequestException('Le token et le mot de passe sont requis');
-    }
-
-    if (dto.password.length < 8) {
-      throw new BadRequestException(
-        'Le mot de passe doit contenir au moins 8 caractères',
-      );
     }
 
     await this.authService.resetPassword(dto);
