@@ -19,7 +19,7 @@
     "noFallthroughCasesInSwitch": false,
       "moduleResolution": "Node",
       "resolveJsonModule": true,
-      "esModuleInterop": true
+      "esModuleInterop": true,
   }
   
 }

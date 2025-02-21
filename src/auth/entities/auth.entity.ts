@@ -1,18 +1,10 @@
 import { Exclude } from 'class-transformer';
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BaseEntity } from 'src/core/entity/base.entity';
+import { Column, Entity } from 'typeorm';
 
 @Entity()
-export class Auth {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
-
+export class Auth extends BaseEntity {
   @Column({ unique: true })
   @IsEmail()
   email: string;
@@ -31,12 +23,6 @@ export class Auth {
   @IsNotEmpty()
   @MinLength(3)
   lastName: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 
   @Column({ nullable: true })
   refreshToken: string;

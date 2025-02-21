@@ -1,21 +1,10 @@
 import { Auth } from 'src/auth/entities/auth.entity';
+import { BaseEntity } from 'src/core/entity/base.entity';
 import { Task } from 'src/task/entities/task.entity';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToOne,
-  JoinColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-} from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
-
+export class User extends BaseEntity {
   @Column()
   firstName: string;
 
@@ -31,10 +20,4 @@ export class User {
 
   @OneToMany(() => Task, (task) => task.user, { cascade: true })
   tasks: Task[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
